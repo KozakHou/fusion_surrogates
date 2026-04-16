@@ -7,6 +7,12 @@ designed to provide surrogate models for
 [TORAX](https://github.com/google-deepmind/torax), but
 the models should be usable by other fusion simulators.
 
+Bundled model assets are distributed as package resources inside the published
+wheel. For normal use, prefer the registry-backed loaders such as
+`QLKNNModel.load_default_model()`, `QLKNNModel.load_model_from_name(...)`, and
+`FastIonStabilizationModel.load_default_model_for_species(...)` rather than
+hardcoding package-relative file paths.
+
 ## QLKNN_7_11
 Currently, this library only holds the QLKNN_7_11 model. This model is a
 surrogate of [Qualikiz](https://gitlab.com/qualikiz-group/QuaLiKiz), a

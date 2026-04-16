@@ -14,6 +14,8 @@
 
 """Tests for the ONNX QLKNN_7_11 model."""
 
+import importlib.resources
+
 from absl.testing import absltest
 import chex
 from fusion_surrogates.qlknn import qlknn_model
@@ -27,10 +29,10 @@ class Qlknn711OnnxTest(absltest.TestCase):
 
   def test_qlknn_7_11_onnx_model(self):
     """Tests that the ONNX models outputs match jax model outputs."""
-    with open(
-        registry.ONNX_MODELS["qlknn_7_11_v1"], "rb"
-    ) as f:
-      onnx_model = onnx.load(f.name)
+    with importlib.resources.as_file(
+        registry.get_onnx_model_resource("qlknn_7_11_v1")
+    ) as model_path:
+      onnx_model = onnx.load(str(model_path))
 
     jax_model = qlknn_model.QLKNNModel.load_model_from_name("qlknn_7_11_v1")
 

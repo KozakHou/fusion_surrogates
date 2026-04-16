@@ -31,6 +31,7 @@ for details of the underlying physics.
 """
 
 import dataclasses
+import importlib.resources
 from typing import Any, Final
 
 from absl import logging
@@ -205,11 +206,10 @@ class FastIonStabilizationModel:
 
   @classmethod
   def load_model_from_name(cls, model_name: str) -> 'FastIonStabilizationModel':
-    """Loads a FastIonStabilizationModel by name from the registry."""
-    model_path = registry.MODELS.get(model_name)
-    if model_path is None:
-      raise ValueError(f'Model {model_name} not found in registry.')
-    return cls.load_model_from_path(model_path, model_name)
+    """Loads a packaged FastIonStabilizationModel by registry name."""
+    model_resource = registry.get_model_resource(model_name)
+    with importlib.resources.as_file(model_resource) as model_path:
+      return cls.load_model_from_path(str(model_path), model_name)
 
   @classmethod
   def load_model_from_path(

@@ -21,6 +21,7 @@ turbulent transport in plasmas.
 import abc
 from collections.abc import Mapping
 import dataclasses
+import importlib.resources
 import json
 from typing import Any, Final
 
@@ -372,11 +373,10 @@ class QLKNNModel:
       cls,
       model_name: str,
   ) -> 'QLKNNModel':
-    """Loads a QLKNNModel from a file."""
-    model_path = registry.MODELS.get(model_name)
-    if model_path is None:
-      raise ValueError(f'Model {model_name} not found in registry.')
-    return cls.load_model_from_path(model_path, model_name)
+    """Loads a packaged QLKNNModel by registry name."""
+    model_resource = registry.get_model_resource(model_name)
+    with importlib.resources.as_file(model_resource) as model_path:
+      return cls.load_model_from_path(str(model_path), model_name)
 
   @classmethod
   def load_model_from_path(
